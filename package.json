@@ -1,0 +1,22 @@
+{
+  "name": "weatherclues",
+  "version": "1.0.0",
+  "description": "",
+  "default": "index.html",
+  "targets": {
+    "main": false
+  },
+  "scripts": {
+    "start": "parcel index.html detail/index.html",
+    "build": "parcel build index.html detail/index.html"
+  },
+  "author": "Presh",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.10.3"
+  },
+  "dependencies": {
+    "core-js": "^3.33.3",
+    "regenerator-runtime": "^0.14.0"
+  }
+}
