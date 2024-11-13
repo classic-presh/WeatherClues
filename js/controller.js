@@ -3,55 +3,38 @@ import * as model from "./model.js";
 import recentLocationView from "./views/recentLocationView.js";
 import topLocationView from "./views/topLocationView.js";
 import searchView from "./views/searchView.js";
+import fullDetailView from "./views/fullDetailView.js";
 import { View } from "./views/View.js";
 import "core-js";
 import "regenerator-runtime";
+import { _ } from "core-js";
 
-// const body = document.getElementById("body");
-// const header = document.querySelector(".header");
-// const main = document.querySelector(".main");
-const searchForm = document.querySelector(".search");
-const searchInput = document.querySelector(".search__field");
-const searchbarContent = document.querySelector(".search-bar__content");
-const currentLocationBar = document.querySelector(".current-location");
-const currentLocationLink = document.querySelector(".current-locationLink");
-const overlay = document.querySelector(".overlay");
+// const view = new View();
+
 const recentLocationsContainer = document.querySelector(".recent-locations");
-const topLocationsContainer = document.querySelector(".top-locations");
-// const locationInfo = document.querySelector(".location__info");
-
-searchInput.addEventListener("click", function () {
-  currentLocationBar.classList.remove("hidden");
-  currentLocationLink.classList.remove("hidden");
-  searchbarContent.style.borderRadius = "0.5rem 0.5rem 0 0";
-  overlay.classList.remove("hidden");
-});
-
-overlay.addEventListener("click", function () {
-  currentLocationBar.classList.add("hidden");
-  currentLocationLink.classList.add("hidden");
-  searchbarContent.style.borderRadius = "0.5rem";
-  overlay.classList.add("hidden");
-});
-
 // RapidAPI key1 = 03e4e42c3fmsh46008762cdcc09dp18dd76jsn2a5f64b69cce
 // RapidAPI key2 = bcca1ee0e3msh3f17aa5dd4bb138p169f1ejsncfec43f61301
 
 // Location API call
-const locationApiCall = async function (query) {
+const locationApiCall = async function (query, currentLocationBar) {
   try {
-    return await model.getLocation(query);
+    return await model.getLocation(query, currentLocationBar);
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
 
 // WEATHER API CALL
 // Recent Location
-const recentLocationWeather = async function (locality, query) {
+const recentLocationWeather = async function (
+  locality,
+  query,
+  currentLocationBar,
+  clearView,
+  renderView
+) {
   try {
-    await model.getWeatherInfo(locality, query);
+    await model.getWeatherInfo(locality, query, currentLocationBar);
 
     // -avoiding duplicate locations
     const newRecentLocations = model.state.recentLocations.filter(
@@ -59,141 +42,240 @@ const recentLocationWeather = async function (locality, query) {
     );
     model.state.recentLocations = newRecentLocations;
 
+    // -avoiding duplicate cities
+    const newRecentCities = model.state.recentCities.filter((city) => {
+      const fetchedCity = model.state.locationWeatherInfo.locality
+        ? model.state.locationWeatherInfo.locality
+        : model.state.locationWeatherInfo.region;
+      return city !== fetchedCity;
+    });
+    model.state.recentCities = newRecentCities;
+
     // -limiting the recentLocation array to three elements
     if (model.state.recentLocations.length === 3) {
       model.state.recentLocations.shift();
     }
 
+    // -limiting the recentCities array to three elements
+    if (model.state.recentCities.length === 3) {
+      model.state.recentCities.shift();
+    }
+
     // -adding to recent locations array
     model.state.recentLocations.push(model.state.locationWeatherInfo);
 
+    // -storing recent cities
+    model.state.recentCities.push(
+      model.state.locationWeatherInfo.locality
+        ? model.state.locationWeatherInfo.locality
+        : model.state.locationWeatherInfo.region
+    );
+
     // -clearing input field
-    searchView.clearInput();
+    clearView.clearInput();
 
     // 2. Rendering recent location on card
-    recentLocationsContainer.innerHTML = "";
-    recentLocationView.renderAll(model.state.recentLocations);
+    renderView.render(
+      model.state.locationWeatherInfo,
+      currentLocationResultDetail,
+      searchResultDetail
+    );
 
-    model.persistRecentLocations();
-
-    // // 1. Loading Weather Info
-    // const response = await fetch(url, options);
-    // const result = await response.json();
-
-    // const lat = result.location.lat.toString().slice(-5);
-    // const lon = result.location.lon.toString().slice(-5);
-    // const latLon = [lat, lon];
-
-    // class dailyWeatherDetailsTemplate {
-    //   constructor(i) {
-    //     this.date = this.weatherDate(i);
-    //     this.values = this.weatherValues(i);
-    //   }
-
-    //   weatherDate(i) {
-    //     return result.timelines.daily[i].time.slice(0, 10);
-    //   }
-
-    //   weatherValues(i) {
-    //     return {
-    //       cloudCover: Math.round(
-    //         result.timelines.daily[i].values.cloudCoverAvg
-    //       ),
-    //       dewPoint: Math.round(result.timelines.daily[i].values.dewPointAvg),
-    //       humidity: Math.round(result.timelines.daily[i].values.humidityAvg),
-    //       pressure: Math.round(
-    //         result.timelines.daily[i].values.pressureSurfaceLevelAvg
-    //       ),
-    //       temperature: Math.round(
-    //         result.timelines.daily[i].values.temperatureAvg
-    //       ),
-    //       windGust: Math.round(result.timelines.daily[i].values.windGustAvg),
-    //     };
-    //   }
-    // }
-
-    // const locationWeatherInfo = {
-    //   id: latLon.join(""),
-    //   ...{ ...(await locationApiCall(query)) },
-    //   weatherDetails: {
-    //     day1: new dailyWeatherDetailsTemplate(0),
-    //     day2: new dailyWeatherDetailsTemplate(1),
-    //     day3: new dailyWeatherDetailsTemplate(2),
-    //     day4: new dailyWeatherDetailsTemplate(3),
-    //   },
-    // };
-
-    // console.log(locationWeatherInfo);
-
-    // // avoiding duplicate locations
-    // const newRecentLocations = recentLocations.filter(
-    //   (location) => location.id !== locationWeatherInfo.id
-    // );
-    // recentLocations = newRecentLocations;
-
-    // // limiting the recentLocation array to three elements
-    // if (recentLocations.length === 3) {
-    //   recentLocations.shift();
-    // }
-
-    // recentLocations.push(locationWeatherInfo);
-
-    // // 2. Rendering recent location on card
-    // recentLocationsContainer.innerHTML = "";
-
-    // recentLocations.forEach((location) => {
-    //   const markup = `
-    //       <a class="location__info fade-in" href="detail/">
-    //         <h3 class="city">${
-    //           location.locality ? location.locality : location.region
-    //         }</h3>
-    //         <p class="country">${location.country}</p>
-    //         <div class="temperature">
-    //           <i class="fa fa-cloud-sun"></i>
-    //           <p>${
-    //             location.weatherDetails.day1.values.temperature
-    //           } ̊<span>C</span></p>
-    //           </div>
-    //       </a>
-    //     `;
-
-    //   recentLocationsContainer.insertAdjacentHTML("afterbegin", markup);
-    //   searchInput.value = "";
-    // });
+    model.persistRecentCities();
   } catch (error) {
-    console.error(error);
+    throw error;
+  }
+};
+
+// Refreshing recent locations
+const refresh = function () {
+  if (model.state.recentCities.length === 1)
+    recentLocationWeather(
+      model.state.recentCities[0],
+      model.state.recentCities[0],
+      searchView.currentLocationBar,
+      searchView,
+      recentLocationView
+    );
+
+  if (model.state.recentCities.length === 2) {
+    recentLocationWeather(
+      model.state.recentCities[0],
+      model.state.recentCities[0],
+      searchView.currentLocationBar,
+      searchView,
+      recentLocationView
+    );
+
+    setTimeout(() => {
+      recentLocationWeather(
+        model.state.recentCities[1],
+        model.state.recentCities[1],
+        searchView.currentLocationBar,
+        searchView,
+        recentLocationView
+      );
+    }, 2 * 1000);
+  }
+
+  if (model.state.recentCities.length === 3) {
+    recentLocationWeather(
+      model.state.recentCities[1],
+      model.state.recentCities[1],
+      searchView.currentLocationBar,
+      searchView,
+      recentLocationView
+    );
+
+    setTimeout(() => {
+      recentLocationWeather(
+        model.state.recentCities[2],
+        model.state.recentCities[2],
+        searchView.currentLocationBar,
+        searchView,
+        recentLocationView
+      );
+    }, 2 * 1000);
   }
 };
 
 // Submitting search query
-searchForm.addEventListener("submit", async function (e) {
-  // e.preventDefault();
+const searchResultHome = async function () {
+  recentLocationsContainer.innerHTML = "";
 
   const locationResult = await locationApiCall(searchView.getSearchQuery());
-  recentLocationWeather(locationResult.locality, searchView.getSearchQuery());
-});
+
+  const fetchedCity = locationResult.locality
+    ? locationResult.locality
+    : locationResult.region;
+
+  const check = model.state.recentCities.some((city) => city === fetchedCity);
+  if (check)
+    model.state.recentCities = model.state.recentCities.filter(
+      (city) => city !== fetchedCity
+    );
+
+  refresh();
+
+  setTimeout(() => {
+    recentLocationWeather(
+      fetchedCity,
+      searchView.getSearchQuery(),
+      searchView.currentLocationBar,
+      searchView,
+      recentLocationView
+    );
+  }, 4 * 1000);
+};
+
+const searchResultDetail = async function () {
+  recentLocationsContainer.innerHTML = "";
+
+  const locationResult = await locationApiCall(fullDetailView.getSearchQuery());
+
+  const fetchedCity = locationResult.locality
+    ? locationResult.locality
+    : locationResult.region;
+
+  const check = model.state.recentCities.some((city) => city === fetchedCity);
+  if (check)
+    model.state.recentCities = model.state.recentCities.filter(
+      (city) => city !== fetchedCity
+    );
+
+  recentLocationWeather(
+    fetchedCity,
+    fullDetailView.getSearchQuery(),
+    fullDetailView.detailCurrentLocationBar,
+    fullDetailView,
+    fullDetailView
+  );
+};
 
 // Using current location
-currentLocationBar.addEventListener("click", function () {
+const currentLocationResultHome = async function () {
+  recentLocationsContainer.innerHTML = "";
+
   navigator.geolocation.getCurrentPosition(
     async function (position) {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
       const latlon = [latitude, longitude].join(",");
-      console.log(latlon);
 
       const locationResult = await locationApiCall(latlon);
-      console.log(locationResult);
-      recentLocationWeather(locationResult.locality, latlon);
+
+      const fetchedCity = locationResult.locality
+        ? locationResult.locality
+        : locationResult.region;
+
+      const check = model.state.recentCities.some(
+        (city) => city === fetchedCity
+      );
+      if (check)
+        model.state.recentCities = model.state.recentCities.filter(
+          (city) => city !== fetchedCity
+        );
+
+      refresh();
+
+      setTimeout(() => {
+        recentLocationWeather(
+          fetchedCity,
+          latlon,
+          searchView.currentLocationBar,
+          searchView,
+          recentLocationView
+        );
+      }, 4 * 1000);
     },
     function () {
       alert("Could not get your current location!");
     }
   );
-});
+};
+
+const currentLocationResultDetail = async function () {
+  recentLocationsContainer.innerHTML = "";
+
+  navigator.geolocation.getCurrentPosition(
+    async function (position) {
+      const { latitude } = position.coords;
+      const { longitude } = position.coords;
+      const latlon = [latitude, longitude].join(",");
+
+      const locationResult = await locationApiCall(
+        latlon,
+        fullDetailView.detailCurrentLocationBar
+      );
+
+      const fetchedCity = locationResult.locality
+        ? locationResult.locality
+        : locationResult.region;
+
+      const check = model.state.recentCities.some(
+        (city) => city === fetchedCity
+      );
+      if (check)
+        model.state.recentCities = model.state.recentCities.filter(
+          (city) => city !== fetchedCity
+        );
+
+      recentLocationWeather(
+        fetchedCity,
+        latlon,
+        fullDetailView.detailCurrentLocationBar,
+        fullDetailView,
+        fullDetailView
+      );
+    },
+    function () {
+      alert("Could not get your current location!");
+    }
+  );
+};
 
 // Top Locations
-const topLocationWeather = async function (locality, query) {
+const topLocationWeather = async function (locality, query, renderView) {
   try {
     // 1. Loading Weather Info
     await model.getWeatherInfo(locality, query);
@@ -208,58 +290,92 @@ const topLocationWeather = async function (locality, query) {
     model.state.topLocations.push(model.state.locationWeatherInfo);
 
     // 2. Rendering top locations on card
-    topLocationView.render(model.state.locationWeatherInfo);
+    renderView.render(model.state.locationWeatherInfo);
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
 
-const topCities = [
-  "abuja",
-  "london",
-  "washington dc",
-  "beijing",
-  "brasilia",
-  "canberra",
-];
-
-const loadTopLocations = function (city) {
-  (async function () {
-    const locationResult = await locationApiCall(city);
-    topLocationWeather(locationResult.locality, city);
-  })();
+const loadTopLocations = async function (city) {
+  const locationResult = await locationApiCall(city);
+  topLocationWeather(
+    locationResult.locality ? locationResult.locality : locationResult.region,
+    city,
+    topLocationView
+  );
 };
 
-loadTopLocations(topCities[0]);
-
 setTimeout(() => {
-  loadTopLocations(topCities[1]);
-}, 2 * 1000);
-
-setTimeout(() => {
-  loadTopLocations(topCities[2]);
-}, 4 * 1000);
-
-setTimeout(() => {
-  loadTopLocations(topCities[3]);
+  loadTopLocations(model.state.topCities[0]);
 }, 6 * 1000);
-
 setTimeout(() => {
-  loadTopLocations(topCities[4]);
+  loadTopLocations(model.state.topCities[1]);
 }, 8 * 1000);
-
 setTimeout(() => {
-  loadTopLocations(topCities[5]);
+  loadTopLocations(model.state.topCities[2]);
 }, 10 * 1000);
+// setTimeout(() => {
+//   loadTopLocations(model.state.topCities[3]);
+// }, 12 * 1000);
+// setTimeout(() => {
+//   loadTopLocations(model.state.topCities[4]);
+// }, 14 * 1000);
+// setTimeout(() => {
+//   loadTopLocations(model.state.topCities[5]);
+// }, 16 * 1000);
 
-const loadStorage = function () {
-  recentLocationView.renderAll(model.state.recentLocations);
+// Loading stored recent locations
+const loadStorage = async function (city) {
+  if (model.state.recentCities.length === 0) return;
+  const locationResult = await locationApiCall(city);
+  recentLocationWeather(
+    locationResult.locality ? locationResult.locality : locationResult.region,
+    city,
+    searchView.currentLocationBar,
+    searchView,
+    recentLocationView
+  );
 };
-const subView = new View();
+loadStorage(model.state.recentCities[0]);
 
+if (model.state.recentCities[1])
+  setTimeout(() => {
+    loadStorage(model.state.recentCities[1]);
+  }, 2 * 1000);
+
+if (model.state.recentCities[2])
+  setTimeout(() => {
+    loadStorage(model.state.recentCities[2]);
+  }, 4 * 1000);
+
+// Switching to full details
+const loadFullDetailsRecentLocation = (locationEl) => {
+  fullDetailView.renderFullDetails(
+    locationEl,
+    model.state.recentLocations,
+    currentLocationResultDetail,
+    searchResultDetail
+  );
+};
+
+const loadFullDetailsTopLocation = (locationEl) => {
+  fullDetailView.renderFullDetails(
+    locationEl,
+    model.state.topLocations,
+    currentLocationResultDetail,
+    searchResultDetail
+  );
+};
+
+// Initializing Handlers
 const initHandler = function () {
-  subView.addHandlerStorage(loadStorage);
-  // searchView.addHandlerSearch(recentLocationWeather, locationApiCall);
-  // searchView.addHandlerCurrentLocation(recentLocationWeather, locationApiCall);
+  searchView.addHandlerCurrentLocationResult(currentLocationResultHome);
+  searchView.addHandlerSearchResult(searchResultHome);
+  fullDetailView.addHandlerRenderFullDetailRecent(
+    loadFullDetailsRecentLocation
+  );
+  fullDetailView.addHandlerRenderFullDetailTop(loadFullDetailsTopLocation);
+  fullDetailView.addHandlerDailyWeather();
+  fullDetailView.addHandlerPresentDayWeather();
 };
 initHandler();

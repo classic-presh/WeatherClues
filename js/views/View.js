@@ -1,28 +1,50 @@
 export class View {
   _data;
 
-  renderAll(data) {
-    this._data = data;
-    this._clear();
-    this._data.forEach((location) => {
-      const markup = this._generateMarkup(location);
-      this._parentEl.insertAdjacentHTML("afterbegin", markup);
-    });
-  }
-
   _clear() {
     this._parentEl.innerHTML = "";
+  }
+
+  _generateMarkup(data) {
+    return `
+          <a class="location-info-card fade-in" data-id='${data.id}' href="#">
+            <div class="location-info-card__side location-info-card__side--front">
+              <h3 class="city">${
+                data.locality ? data.locality : data.region
+              }</h3>
+              <p class="country">${data.country}</p>
+              <div class="temperature">
+                <i class="fa fa-cloud-sun"></i>
+                <p>${
+                  data.weatherDetails.day1.currentHour.values.temperature
+                } ̊<span>C</span></p>
+              </div>
+            </div>
+
+            <div class="location-info-card__side location-info-card__side--back">
+              <div class='place'>
+              <h4 class="city">${
+                data.locality ? data.locality : data.region
+              }</h4>
+              </div>
+              <div class="brief-detail">
+                <p>Precipitation Probability: ${
+                  data.weatherDetails.day1.currentHour.values
+                    .precipitationProbability
+                }%</p>
+                <p>Dew Point: ${
+                  data.weatherDetails.day1.currentHour.values.dewPoint
+                } °c</p>
+                <p>Cloud Cover: ${
+                  data.weatherDetails.day1.currentHour.values.cloudCover
+                }%</p>
+              </div>
+            </div>
+          </a>
+        `;
   }
 
   addHandlerStorage(handler) {
     window.addEventListener("load", handler);
   }
-
-  // addHandlerDetail(handler) {
-  //   // #parentEl.addEventListener('click', handler)
-  // }
-
-  // showDetail(e) {
-  //   _parentEl.innerHTML = "";
-  // }
 }

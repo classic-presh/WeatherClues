@@ -9,7 +9,7 @@
 
   <link rel="stylesheet" href="./css/style.css" />
 
-  <link rel="stylesheet" href="./detail/css/style.css" />
+  <!-- <link rel="stylesheet" href="./detail/css/style.css" /> -->
 
 
   <link rel="stylesheet" href="fontawesome-free-6.1.1-web/css/all.css" />
@@ -26,33 +26,34 @@
 </head>
 
 <body id="body">
-  <header class="header">
-    <div class="logo">
-      <i class="fa fa-cloud" aria-hidden="true"></i>
-      <h1>WeatherClues</h1>
-    </div>
-    <div class="search-bar">
-      <div class="search-bar__content">
-        <i class="fa fa-search"></i>
-        <form class="search" action="#">
-          <input class="search__field" type="search" placeholder="Search Location" />
-        </form>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <i class="fa fa-cloud" aria-hidden="true"></i>
+        <h1>WeatherClues</h1>
       </div>
-      <a href="#" class="current-locationLink hidden">
-        <div class="current-location hidden">
-          <i class="fa fa-location-arrow"></i>
-          <p>Use your current location</p>
+      <div class="search-bar">
+        <div class="search-bar__content">
+          <i class="fa fa-search"></i>
+          <form id="search" class="search" action="#">
+            <input class="search__field" type="search" placeholder="Search Location" />
+          </form>
         </div>
-      </a>
-    </div>
-  </header>
+        <a href="#" class="current-location__link hidden">
+          <div class="current-location hidden">
+            <i class="fa fa-location-arrow"></i>
+            <p>Use your current location</p>
+          </div>
+        </a>
+      </div>
+    </header>
 
-  <div class="overlay hidden"></div>
+    <div class="overlay hidden"></div>
 
-  <main class="main">
-    <h5 class="section__heading move-in-left">Recent Locations</h5>
-    <section class="recent-locations">
-      <!-- <a class="location-info-card" href="detail/">
+    <main class="main">
+      <h5 class="section__heading">Recent Locations</h5>
+      <section class="locations recent-locations">
+        <!-- <a class="location-info-card" href="detail/">
         <div class="location-info-card__side location-info-card__side--front">
           <h3 class="city">Ibadan</h3>
           <p class="country">Nigeria</p>
@@ -61,22 +62,13 @@
             <p>29 ̊<span>C</span></p>
           </div>
         </div>
-
-        <div class="location-info-card__side location-info-card__side--back">
-          <h3 class="city">Ibadan</h3>
-          <p class="country">Nigeria</p>
-          <div class="temperature">
-            <i class="fa fa-cloud-sun"></i>
-            <p>29 ̊<span>C</span></p>
-          </div>
-        </div>
       </a> -->
-    </section>
+      </section>
 
 
-    <h5 class="section__heading move-in-right">Top Locations</h5>
-    <section class="top-locations">
-      <!-- <a class="location-info-card" href="detail/">
+      <h5 class="section__heading">Top Locations</h5>
+      <section class="locations top-locations">
+        <!-- <a class="location-info-card" href="detail/">
           <div class="location-info-card__side location-info-card__side--front">
             <h3 class="city">Ibadan</h3>
             <p class="country">Nigeria</p>
@@ -85,112 +77,10 @@
               <p>29 ̊<span>C</span></p>
             </div>
           </div>
-
-          <div class="location-info-card__side location-info-card__side--back">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-        </a>
-
-        <a class="location-info-card" href="detail/">
-          <div class="location-info-card__side location-info-card__side--front">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-          </div>
-
-          <div class="location-info-card__side location-info-card__side--back">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-        </a>
-
-        <a class="location-info-card" href="detail/">
-          <div class="location-info-card__side location-info-card__side--front">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-          </div>
-
-          <div class="location-info-card__side location-info-card__side--back">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-        </a>
-
-        <a class="location-info-card" href="detail/">
-          <div class="location-info-card__side location-info-card__side--front">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-          </div>
-
-          <div class="location-info-card__side location-info-card__side--back">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-        </a>
-
-        <a class="location-info-card" href="detail/">
-          <div class="location-info-card__side location-info-card__side--front">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-          </div>
-
-          <div class="location-info-card__side location-info-card__side--back">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-        </a>
-        
-        <a class="location-info-card" href="detail/">
-          <div class="location-info-card__side location-info-card__side--front">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
-          </div>
-
-          <div class="location-info-card__side location-info-card__side--back">
-            <h3 class="city">Ibadan</h3>
-            <p class="country">Nigeria</p>
-            <div class="temperature">
-              <i class="fa fa-cloud-sun"></i>
-              <p>29 ̊<span>C</span></p>
-            </div>
         </a> -->
-    </section>
-  </main>
+      </section>
+    </main>
+  </div>
 </body>
 
 </html>
