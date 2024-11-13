@@ -7,8 +7,8 @@
     "main": false
   },
   "scripts": {
-    "start": "parcel index.html detail/index.html",
-    "build": "parcel build index.html detail/index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "author": "Presh",
   "license": "ISC",
