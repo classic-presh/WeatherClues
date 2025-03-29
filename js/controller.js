@@ -9,7 +9,7 @@ import "core-js";
 import "regenerator-runtime";
 import { _ } from "core-js";
 
-// const view = new View();
+const view = new View();
 
 const recentLocationsContainer = document.querySelector(".recent-locations");
 // RapidAPI key1 = 03e4e42c3fmsh46008762cdcc09dp18dd76jsn2a5f64b69cce
@@ -115,7 +115,7 @@ const refresh = function () {
         searchView,
         recentLocationView
       );
-    }, 2 * 1000);
+    }, 2.5 * 1000);
   }
 
   if (model.state.recentCities.length === 3) {
@@ -135,7 +135,7 @@ const refresh = function () {
         searchView,
         recentLocationView
       );
-    }, 2 * 1000);
+    }, 2.5 * 1000);
   }
 };
 
@@ -165,7 +165,7 @@ const searchResultHome = async function () {
       searchView,
       recentLocationView
     );
-  }, 4 * 1000);
+  }, 5 * 1000);
 };
 
 const searchResultDetail = async function () {
@@ -226,7 +226,7 @@ const currentLocationResultHome = async function () {
           searchView,
           recentLocationView
         );
-      }, 4 * 1000);
+      }, 5 * 1000);
     },
     function () {
       alert("Could not get your current location!");
@@ -288,6 +288,14 @@ const topLocationWeather = async function (locality, query, renderView) {
 
     // adding to top locations array
     model.state.topLocations.push(model.state.locationWeatherInfo);
+    console.log(model.state.topLocations);
+    if (model.state.topLocations.length === model.state.topCities.length) {
+      view.loadSuccess();
+
+      setTimeout(() => {
+        view.hideLoader();
+      }, 2.5 * 1000);
+    }
 
     // 2. Rendering top locations on card
     renderView.render(model.state.locationWeatherInfo);
@@ -307,13 +315,13 @@ const loadTopLocations = async function (city) {
 
 setTimeout(() => {
   loadTopLocations(model.state.topCities[0]);
-}, 6 * 1000);
+}, 7.5 * 1000);
 setTimeout(() => {
   loadTopLocations(model.state.topCities[1]);
-}, 8 * 1000);
+}, 10 * 1000);
 setTimeout(() => {
   loadTopLocations(model.state.topCities[2]);
-}, 10 * 1000);
+}, 12.5 * 1000);
 // setTimeout(() => {
 //   loadTopLocations(model.state.topCities[3]);
 // }, 12 * 1000);
@@ -341,12 +349,12 @@ loadStorage(model.state.recentCities[0]);
 if (model.state.recentCities[1])
   setTimeout(() => {
     loadStorage(model.state.recentCities[1]);
-  }, 2 * 1000);
+  }, 2.5 * 1000);
 
 if (model.state.recentCities[2])
   setTimeout(() => {
     loadStorage(model.state.recentCities[2]);
-  }, 4 * 1000);
+  }, 5 * 1000);
 
 // Switching to full details
 const loadFullDetailsRecentLocation = (locationEl) => {

@@ -1,8 +1,18 @@
 export class View {
+  loaderBox = document.querySelector(".loader-box");
+
   _data;
 
   _clear() {
     this._parentEl.innerHTML = "";
+  }
+
+  loadSuccess() {
+    this.loaderBox.innerHTML = "Locations loaded successfully!";
+  }
+
+  hideLoader() {
+    this.loaderBox.classList.add("hidden");
   }
 
   _generateMarkup(data) {

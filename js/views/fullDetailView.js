@@ -203,6 +203,34 @@ class FullDetailView {
       <i class="fa fa-cloud-sun"></i>
       </div>
 
+  <div class="mobile-navigation">
+    <input type="checkbox" id="navigation-toggle" class="mobile-navigation__checkbox">
+
+    <label for="navigation-toggle" class="mobile-navigation__button">
+      <span class="mobile-navigation__icon">&nbsp;</span>
+    </label>
+    <div class="mobile-navigation__background">&nbsp;</div>
+
+    <div class="detail-search-bar detail-search-bar-mobile">
+      <div class="detail-search-bar__content detail-search-bar__content-mobile">
+        <i class="fa fa-search"></i>
+        <form class="detail-search detail-search-mobile">
+        <input class="detail-search__field detail-search__field-mobile" type="search" placeholder="Search Location" />
+        </form>
+      </div>
+
+      <div class=" detail-location-tabs detail-location-tabs-mobile detail-hidden">
+        <a href="#" class="detail-location-tab detail-location-tab-mobile detail-location__current detail-location__current-mobile">
+        <div class="detail-place">
+          <span><i class="fa fa-location-arrow"></i>
+          <p>Use Current Location</p>
+          </span>
+        </div>
+        </a>
+      </div>
+      </div>
+  </div>
+
       <div class="detail-search-bar">
       <div class="detail-search-bar__content">
         <i class="fa fa-search"></i>

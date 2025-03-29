@@ -81,7 +81,7 @@ export const getWeatherInfo = async function (
           dateFull = new Date(result2.timelines[timeStep][i].time);
         }
         const date = `${dateFull.getDate()}`.padStart(2, 0);
-        const month = `${dateFull.getMonth()}`.padStart(2, 0);
+        const month = `${dateFull.getMonth() + 1}`.padStart(2, 0);
         const year = dateFull.getFullYear();
         return `${date}/${month}/${year}`;
       }
