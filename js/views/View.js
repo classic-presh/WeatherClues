@@ -7,12 +7,32 @@ export class View {
     this._parentEl.innerHTML = "";
   }
 
+  _defaultLoadMsg() {
+    return `<div class="loader-text">Loading locations, please wait</div>
+        <div class="loader"></div>`;
+  }
+
   loadSuccess() {
     this.loaderBox.innerHTML = "Locations loaded successfully!";
   }
 
   hideLoader() {
     this.loaderBox.classList.add("hidden");
+  }
+
+  showLoader() {
+    this.loaderBox.innerHTML = this._defaultLoadMsg();
+    this.loaderBox.classList.remove("hidden");
+  }
+
+  loadCompletion() {
+    setTimeout(() => {
+      this.loadSuccess();
+    }, 1.5 * 1000);
+
+    setTimeout(() => {
+      this.hideLoader();
+    }, 4 * 1000);
   }
 
   _generateMarkup(data) {

@@ -19,7 +19,7 @@ class SearchView {
     this._overlay.classList.remove("hidden");
   }
 
-  _hideCurrentLocationBar() {
+  hideCurrentLocationBar() {
     this.currentLocationBar.classList.add("hidden");
     this._currentLocationLink.classList.add("hidden");
     this._searchbarContent.style.borderRadius = "0.5rem";
@@ -36,11 +36,11 @@ class SearchView {
   _addHandlerHide() {
     this._overlay.addEventListener(
       "click",
-      this._hideCurrentLocationBar.bind(this)
+      this.hideCurrentLocationBar.bind(this)
     );
     this._searchForm.addEventListener(
       "submit",
-      this._hideCurrentLocationBar.bind(this)
+      this.hideCurrentLocationBar.bind(this)
     );
   }
 

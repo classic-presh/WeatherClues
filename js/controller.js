@@ -89,6 +89,7 @@ const recentLocationWeather = async function (
 
 // Refreshing recent locations
 const refresh = function () {
+  if (model.state.recentCities === 0) return;
   if (model.state.recentCities.length === 1)
     recentLocationWeather(
       model.state.recentCities[0],
@@ -141,6 +142,7 @@ const refresh = function () {
 
 // Submitting search query
 const searchResultHome = async function () {
+  view.showLoader();
   recentLocationsContainer.innerHTML = "";
 
   const locationResult = await locationApiCall(searchView.getSearchQuery());
@@ -166,6 +168,12 @@ const searchResultHome = async function () {
       recentLocationView
     );
   }, 5 * 1000);
+
+  if (model.state.topLocations.length === model.state.topCities.length) {
+    setTimeout(() => {
+      view.loadCompletion();
+    }, 3 * 1000);
+  }
 };
 
 const searchResultDetail = async function () {
@@ -194,6 +202,7 @@ const searchResultDetail = async function () {
 
 // Using current location
 const currentLocationResultHome = async function () {
+  view.showLoader();
   recentLocationsContainer.innerHTML = "";
 
   navigator.geolocation.getCurrentPosition(
@@ -227,6 +236,15 @@ const currentLocationResultHome = async function () {
           recentLocationView
         );
       }, 5 * 1000);
+
+      searchView.hideCurrentLocationBar();
+      if (
+        model.state.recentLocations.length === model.state.recentCities.length
+      ) {
+        setTimeout(() => {
+          view.loadCompletion();
+        }, 3 * 1000);
+      }
     },
     function () {
       alert("Could not get your current location!");
@@ -290,11 +308,7 @@ const topLocationWeather = async function (locality, query, renderView) {
     model.state.topLocations.push(model.state.locationWeatherInfo);
     console.log(model.state.topLocations);
     if (model.state.topLocations.length === model.state.topCities.length) {
-      view.loadSuccess();
-
-      setTimeout(() => {
-        view.hideLoader();
-      }, 2.5 * 1000);
+      view.loadCompletion();
     }
 
     // 2. Rendering top locations on card
